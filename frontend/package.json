@@ -15,6 +15,7 @@
     "axios": "^1.7.9",
     "chart.js": "^4.4.8",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "frontend": "file:",
     "jwt-decode": "^4.0.0",
     "pdfjs-dist": "^4.10.38",
     "react": "^19.0.0",
