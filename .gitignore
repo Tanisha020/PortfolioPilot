@@ -1,0 +1,37 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log
+package-lock.json
+
+# Python dependencies
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+Pipfile
+Pipfile.lock
+venv/
+.env
+
+# Logs and database files
+logs/
+*.log
+*.sqlite
+*.db
+
+# Environment variables
+.env
+*.env
+
+# IDE and Editor settings
+.vscode/
+.idea/
+*.sublime-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# FastAPI specific
+instance/
