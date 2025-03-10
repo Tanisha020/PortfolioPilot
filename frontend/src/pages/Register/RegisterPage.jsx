@@ -32,12 +32,12 @@ const RegisterPage = () => {
       return handleError("All Fields are required ");
     }
     try {
-      const res = await axios.post(`${import.meta.env.VITE_URL}/register`, {
-
+      const res = await axios.post(`${import.meta.env.VITE_URL}/auth/register`, {
         name,
         email,
         password,
-      });
+    });
+    
 
       handleSuccess("Registration Successful");
       setTimeout(() => {

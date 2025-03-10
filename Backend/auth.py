@@ -1,32 +1,23 @@
-from fastapi import FastAPI, HTTPException, Depends, Header
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from database import get_db, User
 from pydantic import BaseModel
 import bcrypt
 import jwt
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from fastapi.middleware.cors import CORSMiddleware
 
-
+# Load .env variables
 load_dotenv()
-
 SECRET_KEY = os.getenv("JWT_SECRET", "your_secret_key")
 ALGORITHM = "HS256"
 
-app = FastAPI()
+# ✅ Use APIRouter instead of creating a new FastAPI app
+auth_router = APIRouter()
 
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-fake_users = {}
-
-
+# ✅ Pydantic Models for Request Validation
 class UserRegister(BaseModel):
     name: str
     email: str
@@ -36,69 +27,48 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
-
-def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
-
-
-def create_jwt_token(data: dict, expires_delta: timedelta = timedelta(hours=1)):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + expires_delta
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
-
-def get_current_user(authorization: str = Header(None)):
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing or invalid token")
-    
-    token = authorization.split("Bearer ")[1]
+# ✅ Register Endpoint (Saves to Neon DB)
+@auth_router.post("/register")
+async def register(user: UserRegister, db: AsyncSession = Depends(get_db)):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload["sub"]
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        async with db.begin():
+            # Debugging: Print input values
+            print(f"Registering user: {user.name}, {user.email}")
+
+            result = await db.execute(select(User).filter(User.email == user.email))
+            existing_user = result.scalars().first()
+
+            if existing_user:
+                print("User already exists!")
+                raise HTTPException(status_code=400, detail="User already exists")
+
+            hashed_pw = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
+            new_user = User(name=user.name, email=user.email, password=hashed_pw)
+
+            db.add(new_user)
+            await db.commit()
+        
+        return {"message": "User registered successfully"}
+
+    except Exception as e:
+        print(f"Error during registration: {e}")  # Debugging
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
-@app.get("/")
-def home():
-    return {"message": "Welcome to the Authentication API"}
+# ✅ Login Endpoint
+@auth_router.post("/login")
+async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
+    async with db.begin():
+        result = await db.execute(select(User).where(User.email == user.email))
+        db_user = result.scalars().first()
 
+        if not db_user or not bcrypt.checkpw(user.password.encode(), db_user.password.encode()):
+            raise HTTPException(status_code=400, detail="Invalid email or password")
 
-@app.post("/register")
-def register(user: UserRegister):
-    if user.email in fake_users:
-        raise HTTPException(status_code=400, detail="User already exists")
-    
-    hashed_pw = hash_password(user.password)
-    fake_users[user.email] = {"name": user.name, "password": hashed_pw}
-    
-    return {"message": "User registered successfully", "email": user.email}
+    token = jwt.encode({"sub": db_user.email, "exp": datetime.utcnow() + timedelta(hours=1)}, SECRET_KEY, algorithm=ALGORITHM)
+    return {"token": token, "name": db_user.name, "message": "Login successful"}
 
-
-@app.post("/login")
-def login(user: UserLogin):
-    if user.email not in fake_users:
-        raise HTTPException(status_code=400, detail="Invalid email or password")
-    
-    stored_user = fake_users[user.email]
-    stored_password = stored_user["password"]
-
-  
-    if not verify_password(user.password, stored_password):
-        raise HTTPException(status_code=400, detail="Invalid email or password")
-
-    token = create_jwt_token({"sub": user.email})
-    return {"token": token, "name": stored_user["name"], "message": "Login successful"}
-
-
-@app.get("/protected")
-def protected_route(user: str = Depends(get_current_user)):
-    return {"message": f"Hello, {user}! You have access to this protected route."}
-
+# ✅ Protected Route
+@auth_router.get("/protected")
+async def protected_route():
+    return {"message": "You have access to this protected route!"}

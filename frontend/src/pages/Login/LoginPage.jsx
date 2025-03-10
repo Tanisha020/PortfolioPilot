@@ -31,7 +31,7 @@ function LoginPage() {
       return handleError("All Fields are required ");
     }
     try {
-      const res = await axios.post(`${import.meta.env.VITE_URL}/login`, {
+      const res = await axios.post(`${import.meta.env.VITE_URL}/auth/login`, {
 
         email,
         password,
