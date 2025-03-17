@@ -43,56 +43,54 @@
 #         yield session
 
 
+import os
+import ssl
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-import os
-from dotenv import load_dotenv
 from sqlalchemy import Column, Integer, String
-import ssl
+from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
-"
-# Get DATABASE_URL from .env
+# Retrieve the database URL from the .env file (Ensure `sslmode=require` is included)
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Ensure DATABASE_URL is set
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set. Please check your .env file.")
 
-# Create an SSL context for asyncpg
+# ✅ Create an SSL context for asyncpg
 ssl_context = ssl.create_default_context()
-ssl_context.check_hostname = False  # Optional, depends on Neon settings
-ssl_context.verify_mode = ssl.CERT_NONE  # Disable SSL verification (for development only)
+ssl_context.check_hostname = True  # Enforce proper hostname verification
+ssl_context.verify_mode = ssl.CERT_REQUIRED  # Ensure SSL certificates are verified
 
-# Create async engine with proper SSL settings
+# ✅ Create async engine with SSL support
 engine = create_async_engine(
     DATABASE_URL,
     echo=True,
-    connect_args={"ssl": ssl_context}  # ✅ Correct way to enforce SSL
+    connect_args={"ssl": ssl_context}  # Use SSL for secure connections
 )
 
-# Create async session
+# ✅ Create async session
 AsyncSessionLocal = sessionmaker(
     bind=engine,
     class_=AsyncSession,
     expire_on_commit=False
 )
 
-# Base model for SQLAlchemy
+# ✅ Base model for SQLAlchemy
 Base = declarative_base()
 
-# Define User Model to match your `login_credentials` table
+# ✅ Define User Model to match your `login_credentials` table
 class User(Base):
     __tablename__ = "login_credentials"  # Ensure table name matches DB
 
-    id = Column(Integer, primary_key=True, index=True,autoincrement=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     email = Column(String(100), unique=True, nullable=False)
     name = Column(String(50), nullable=False)
     password = Column(String(255), nullable=False)  # Matches your VARCHAR(255)
 
-# Dependency to get database session in routes
+# ✅ Dependency to get database session in routes
 async def get_db():
     async with AsyncSessionLocal() as session:
         try:
