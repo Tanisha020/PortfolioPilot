@@ -68,6 +68,9 @@ async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
         # 🔹 Fetch user without opening a transaction (read-only)
         result = await db.execute(select(User).where(User.email == user.email))
         db_user = result.scalars().first()
+    # except Exception as e:
+    # print(f"🔥 Database Error: {e}")
+    # raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
         if not db_user or not bcrypt.checkpw(user.password.encode(), db_user.password.encode()):
             raise HTTPException(status_code=400, detail="Invalid email or password")

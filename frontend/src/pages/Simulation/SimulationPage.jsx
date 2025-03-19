@@ -8,26 +8,127 @@ export default function SimulationPage() {
   const [investment, setInvestment] = useState(100000);
   const [duration, setDuration] = useState(5);
   const [risk, setRisk] = useState(50);
-  const [market, setMarket] = useState("Bull Market");
+  const [market, setMarket] = useState("bull"); // Keep it lowercase to match backend
   const [allocation, setAllocation] = useState({
     stocks: 40,
     bonds: 30,
     realEstate: 20,
-    crypto: 10,
+    commodities: 10, // Changed from crypto to commodities for backend compatibility
   });
 
-  // Mock Data for Graph
+  const [simulationResult, setSimulationResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Function to call backend simulation API
+  // const handleSimulate = async () => {
+  //   setLoading(true);
+  //   setError("");
+
+  //   // Ensure total allocation is 100%
+  //   const totalAllocation = Object.values(allocation).reduce((a, b) => a + b, 0);
+  //   if (totalAllocation !== 100) {
+  //     setError("Total asset allocation must sum to 100%.");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       `http://127.0.0.1:8000/simulate?investment_amount=${investment}&duration=${duration}&risk_appetite=${risk / 100}&market_condition=${market}&stocks=${allocation.stocks}&bonds=${allocation.bonds}&real_estate=${allocation.realEstate}&commodities=${allocation.commodities}`
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error("Simulation failed. Check input values.");
+  //     }
+
+  //     const data = await response.json();
+  //     setSimulationResult(data.data); // Extract results from API response
+  //   } catch (error) {
+  //     setError(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  const handleSimulate = async () => {
+    setLoading(true);
+    setError("");
+  
+    // Ensure total allocation is 100%
+    const totalAllocation = Object.values(allocation).reduce((a, b) => a + b, 0);
+    if (totalAllocation !== 100) {
+      setError("Total asset allocation must sum to 100%.");
+      setLoading(false);
+      return;
+    }
+  
+    try {
+      const response = await fetch("http://127.0.0.1:8000/simulate", {
+        method: "POST", // ✅ Change to POST
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          investment_amount: investment,
+          duration: duration,
+          risk_appetite: risk / 100,
+          market_condition: market,
+          stocks: allocation.stocks,
+          bonds: allocation.bonds,
+          real_estate: allocation.realEstate,
+          commodities: allocation.commodities,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Simulation failed. Check input values.");
+      }
+  
+      const data = await response.json();
+      setSimulationResult(data.data); // ✅ Store result from API
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
+  // Prepare Graph Data (Real Data from API)
+  // const data = {
+  //   labels: ["Start", "Year 1", "Year 2", "Year 3", "Year 4", "Year 5"],
+  //   datasets: [
+  //     {
+  //       label: "Portfolio Value",
+  //       data: simulationResult
+  //         ? [investment, simulationResult["Final Total Portfolio Value"] * 0.6, simulationResult["Final Total Portfolio Value"] * 0.75, simulationResult["Final Total Portfolio Value"] * 0.9, simulationResult["Final Total Portfolio Value"]]
+  //         : [investment, 125000, 150000, 180000, 210000, 245000], // Mock if no data
+  //       borderColor: "#3B82F6",
+  //       backgroundColor: "rgba(59, 130, 246, 0.2)",
+  //     },
+  //   ],
+  // };
+  const years = ["Start", ...Array.from({ length: duration }, (_, i) => `Year ${i + 1}`)];
+
   const data = {
-    labels: ["2025", "2027", "2029", "2031", "2033", "2035"],
+    labels: years, // Dynamic X-axis labels
     datasets: [
       {
         label: "Portfolio Value",
-        data: [investment, 125000, 150000, 180000, 210000, 245000], // Mock data
+        data: simulationResult
+          ? [
+              investment,
+              ...Array.from({ length: duration }, (_, i) =>
+                simulationResult["Final Total Portfolio Value"] * ((0.6 + i * 0.15) > 1 ? 1 : (0.6 + i * 0.15))
+              ),
+            ]
+          : [investment, 125000, 150000, 180000, 210000, 245000], // Mock values
         borderColor: "#3B82F6",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
       },
     ],
   };
+  
 
   return (
     <div className="min-h-screen bg-[#1E1E2E] text-white p-8">
@@ -93,9 +194,9 @@ export default function SimulationPage() {
                 value={market}
                 onChange={(e) => setMarket(e.target.value)}
               >
-                <option value="Bull Market">Bull Market</option>
-                <option value="Bear Market">Bear Market</option>
-                <option value="Neutral">Neutral</option>
+                <option value="bull">Bull Market</option>
+                <option value="bear">Bear Market</option>
+                <option value="neutral">Neutral</option>
               </select>
             </div>
 
@@ -121,9 +222,14 @@ export default function SimulationPage() {
             </div>
 
             {/* Simulate Button */}
-            <button className="w-full bg-[#3B82F6] text-white p-2 rounded hover:bg-[#2563EB] transition-colors">
-              Simulate Strategy
+            <button
+              className="w-full bg-[#3B82F6] text-white p-2 rounded hover:bg-[#2563EB] transition-colors"
+              onClick={handleSimulate}
+              disabled={loading}
+            >
+              {loading ? "Simulating..." : "Simulate Strategy"}
             </button>
+            {error && <p className="text-red-500 mt-2">{error}</p>}
           </div>
 
           {/* Right Column: Simulation Results */}
@@ -134,38 +240,37 @@ export default function SimulationPage() {
             <div className="p-4 bg-[#3B3B4F] rounded-lg mb-6">
               <Line data={data} />
             </div>
+           {/* Simulation Results */}
+<div className="grid grid-cols-2 gap-4">
+  <div className="p-4 bg-[#3B3B4F] rounded-lg">
+    <p className="text-sm text-gray-400">Expected Return</p>
+    <p className="text-lg font-semibold">{simulationResult ? `${simulationResult["Final Expected Return (%)"]}%` : "12.5%"}</p>
+  </div>
 
-            {/* Key Metrics */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 bg-[#3B3B4F] rounded-lg">
-                <p className="text-sm text-gray-400">Expected Return</p>
-                <p className="text-lg font-bold">12.5%</p>
-              </div>
-              <div className="p-4 bg-[#3B3B4F] rounded-lg">
-                <p className="text-sm text-gray-400">Volatility</p>
-                <p className="text-lg font-bold">8.2%</p>
-              </div>
-              <div className="p-4 bg-[#3B3B4F] rounded-lg">
-                <p className="text-sm text-gray-400">Sharpe Ratio</p>
-                <p className="text-lg font-bold">1.8</p>
-              </div>
-              <div className="p-4 bg-[#3B3B4F] rounded-lg">
-                <p className="text-sm text-gray-400">Max Drawdown</p>
-                <p className="text-lg font-bold">-15.3%</p>
-              </div>
-            </div>
+  <div className="p-4 bg-[#3B3B4F] rounded-lg">
+    <p className="text-sm text-gray-400">Volatility</p>
+    <p className="text-lg font-semibold">{simulationResult ? `${simulationResult["Volatility (%)"]}%` : "8.2%"}</p>
+  </div>
 
-            {/* Projected Value */}
-            <div className="text-center p-6 bg-[#3B3B4F] rounded-lg mt-6">
-              <p className="text-sm text-gray-400">Projected Value (2035)</p>
-              <p className="text-3xl font-bold">$245,000</p>
-              <p className="text-sm text-gray-400 mt-2">
-                Initial Investment: $100,000
-              </p>
-            </div>
-          </div>
+  <div className="p-4 bg-[#3B3B4F] rounded-lg">
+    <p className="text-sm text-gray-400">Sharpe Ratio</p>
+    <p className="text-lg font-semibold">{simulationResult ? `${simulationResult["Sharpe Ratio"]}` : "1.8"}</p>
+  </div>
+
+  <div className="p-4 bg-[#3B3B4F] rounded-lg">
+    <p className="text-sm text-gray-400">Max Drawdown</p>
+    <p className="text-lg font-semibold">{simulationResult ? `${simulationResult["Max Drawdown (%)"]}%` : "15.3%"}</p>
+  </div>
+
+  <div className="p-4 bg-[#3B3B4F] rounded-lg col-span-2">
+    <p className="text-sm text-gray-400">Projected Final Value</p>
+    <p className="text-lg font-semibold">{simulationResult ? `$${simulationResult["Final Total Portfolio Value"]}` : "245,000 USD"}</p>
+  </div>
+</div>
+
         </div>
       </div>
+    </div>
     </div>
   );
 }

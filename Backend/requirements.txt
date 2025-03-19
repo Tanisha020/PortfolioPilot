@@ -7,3 +7,9 @@ psycopg2-binary
 python-jose[cryptography]
 pyjwt
 asyncpg
+ fastapi
+numpy 
+pandas 
+statsmodels 
+pytest 
+uvicorn
