@@ -1,6 +1,7 @@
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
 function Home() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[#1E1E2E] text-white">
       <section className="text-center py-20">
@@ -10,18 +11,18 @@ function Home() {
         <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
           Use our advanced simulation tools to optimize your investment strategy before committing real money.
         </p>
-        <button className="mt-6 px-6 py-3 bg-[#3B82F6] rounded-md text-lg hover:bg-[#2563EB] transition-colors">
+        <button onClick={() => navigate("/simulation")} className="mt-6 px-6 py-3 bg-[#3B82F6] rounded-md text-lg hover:bg-[#2563EB] transition-colors">
           Start Simulating
         </button>
       </section>
 
-]      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 px-10 py-10">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 px-10 py-10">
         <div className="p-6 bg-[#2A2A3A] rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
           <h3 className="text-xl font-semibold text-[#3B82F6]">Investment Strategy Simulation</h3>
           <p className="text-gray-400 mt-2">
             Test different investment scenarios with our advanced simulation tools.
           </p>
-          <button className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
+          <button onClick={() => navigate("/simulation")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
             Try Now →
           </button>
         </div>
@@ -30,7 +31,7 @@ function Home() {
           <p className="text-gray-400 mt-2">
             Analyze risk exposure and potential returns of your strategies.
           </p>
-          <button className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
+          <button onClick={() => navigate("/simulation")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
             Analyze Now →
           </button>
         </div>

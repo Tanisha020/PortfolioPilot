@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { handleSuccess } from "../../utils";
 import { ToastContainer } from "react-toastify";
@@ -11,7 +11,6 @@ const Header = () => {
   const [showLogout, setShowLogout] = useState(false);
   const navigate = useNavigate();
   const profileRef = useRef(null);
-  const location = useLocation();
 
   useEffect(() => {
     const user = localStorage.getItem("loggedInUser");
@@ -51,10 +50,10 @@ const Header = () => {
         </div>
 
         <nav className="flex items-center space-x-6">
-          <a href="#" className="hover:text-[#3B82F6] transition-colors">Home</a>
-          <a href="#" className="hover:text-[#3B82F6] transition-colors">Simulation</a>
-          <a href="#" className="hover:text-[#3B82F6] transition-colors">Assessment</a>
-          <a href="#" className="hover:text-[#3B82F6] transition-colors">Portfolio</a>
+          <Link to="/" className="hover:text-[#3B82F6] transition-colors">Home</Link>
+          <Link to="/simulation" className="hover:text-[#3B82F6] transition-colors">Simulation</Link>
+          <Link to="/assessment" className="hover:text-[#3B82F6] transition-colors">Assessment</Link>
+          <Link to="/portfolio" className="hover:text-[#3B82F6] transition-colors">Portfolio</Link>
 
           {loggedInUser ? (
             <div className="relative" ref={profileRef}>
