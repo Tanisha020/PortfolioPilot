@@ -44,11 +44,18 @@ const RegisterPage = () => {
         navigate("/");
       }, 1000);
     } catch (error) {
+      console.error("Registration Error:", error.response?.data);
+      const errorMessage =
+      error.response?.data?.detail || // ✅ Handle "User already exists"
+      error.response?.data?.error?.details?.[0]?.message || 
+      error.response?.data?.message || 
+      "Registration failed";
       handleError(
-        "Registration failed: " +
-        (error.response?.data?.error?.details[0]?.message ||
-          error.response?.data?.message ||
-          error.message)
+        // "Registration failed: " +
+        // (error.response?.data?.error?.details[0]?.message ||
+        //   error.response?.data?.message ||
+        //   error.message)
+        errorMessage
       );
     }
   };

@@ -13,3 +13,4 @@ pandas
 statsmodels 
 pytest 
 uvicorn
+httpx
