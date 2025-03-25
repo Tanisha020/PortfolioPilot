@@ -65,12 +65,11 @@ const RiskAssessment = () => {
                 {["5", "10", "20"].map((year) => (
                   <button
                     key={year}
-                    onClick={() => setInputs(prev => ({...prev, duration: year}))}
-                    className={`px-4 py-2 rounded transition-colors ${
-                      inputs.duration === year
+                    onClick={() => setInputs(prev => ({ ...prev, duration: year }))}
+                    className={`px-4 py-2 rounded transition-colors ${inputs.duration === year
                         ? "bg-[#3B82F6] text-white"
                         : "bg-[#3B3B4F] hover:bg-[#4B4B5F]"
-                    }`}
+                      }`}
                   >
                     {year} Years
                   </button>
@@ -139,49 +138,58 @@ const RiskAssessment = () => {
           </div>
 
           {/* Right Column - Results */}
+          {/* Right Column - Results */}
           <div className="bg-[#2A2A3A] rounded-lg p-6 shadow-lg">
             <h3 className="text-xl font-semibold mb-6">Assessment Results</h3>
 
-            <div className="space-y-8">
-              {/* Enhanced Metrics Display */}
-              <div className="space-y-6">
-                <div className="p-6 bg-[#3B3B4F] rounded-lg">
-                  <h4 className="text-lg font-semibold mb-4 text-blue-400">Risk Metrics</h4>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center border-b border-gray-600 pb-3">
-                      <span className="text-gray-300">Sharpe Ratio</span>
-                      <span className="font-semibold">{assessmentResults.riskMetrics.sharpeRatio}</span>
-                    </div>
-                    <div className="flex justify-between items-center border-b border-gray-600 pb-3">
-                      <span className="text-gray-300">Maximum Drawdown</span>
-                      <span className="font-semibold">{assessmentResults.riskMetrics.maxDrawdown}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300">Volatility</span>
-                      <span className="font-semibold">{assessmentResults.riskMetrics.volatility}%</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-6 bg-[#3B3B4F] rounded-lg">
-                  <h4 className="text-lg font-semibold mb-4 text-green-400">Profitability Insights</h4>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center border-b border-gray-600 pb-3">
-                      <span className="text-gray-300">Annualized Returns (CAGR)</span>
-                      <span className="font-semibold">{assessmentResults.profitability.annualizedReturns}%</span>
-                    </div>
-                    <div className="flex justify-between items-center border-b border-gray-600 pb-3">
-                      <span className="text-gray-300">ROI</span>
-                      <span className="font-semibold">{assessmentResults.profitability.roi}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300">Beta (vs S&P 500)</span>
-                      <span className="font-semibold">{assessmentResults.profitability.beta}</span>
-                    </div>
-                  </div>
+            <div className="grid grid-cols-1 gap-4">
+              {/* Total Profit */}
+              <div className="p-4 bg-[#3B3B4F] rounded-lg border-l-4 border-blue-500">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Total Profit</span>
+                  <span className="text-xl font-semibold text-blue-400">$24,500</span>
                 </div>
               </div>
 
+              {/* Risk Score */}
+              <div className="p-4 bg-[#3B3B4F] rounded-lg border-l-4 border-red-500">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Risk Score</span>
+                  <span className="text-xl font-semibold text-red-400">6.8/10</span>
+                </div>
+              </div>
+
+              {/* ROI */}
+              <div className="p-4 bg-[#3B3B4F] rounded-lg border-l-4 border-green-500">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">ROI</span>
+                  <span className="text-xl font-semibold text-green-400">45.2%</span>
+                </div>
+              </div>
+
+              {/* Maximum Drawdown */}
+              <div className="p-4 bg-[#3B3B4F] rounded-lg border-l-4 border-yellow-500">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Maximum Drawdown</span>
+                  <span className="text-xl font-semibold text-yellow-400">-15.2%</span>
+                </div>
+              </div>
+
+              {/* Volatility Score */}
+              <div className="p-4 bg-[#3B3B4F] rounded-lg border-l-4 border-purple-500">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Volatility Score</span>
+                  <span className="text-xl font-semibold text-purple-400">12.5</span>
+                </div>
+              </div>
+
+              {/* Reward to Risk Ratio */}
+              <div className="p-4 bg-[#3B3B4F] rounded-lg border-l-4 border-cyan-500">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Reward to Risk Ratio</span>
+                  <span className="text-xl font-semibold text-cyan-400">1.8</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

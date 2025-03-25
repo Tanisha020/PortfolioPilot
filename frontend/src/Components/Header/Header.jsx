@@ -53,7 +53,7 @@ const Header = () => {
           <Link to="/" className="hover:text-[#3B82F6] transition-colors">Home</Link>
           <Link to="/simulation" className="hover:text-[#3B82F6] transition-colors">Simulation</Link>
           <Link to="/risk-assessment" className="hover:text-[#3B82F6] transition-colors">Assessment</Link>
-          <Link to="/portfolio" className="hover:text-[#3B82F6] transition-colors">Portfolio</Link>
+          <Link to="/suggestion" className="hover:text-[#3B82F6] transition-colors">AI Suggestions</Link>
 
           {loggedInUser ? (
             <div className="relative" ref={profileRef}>
