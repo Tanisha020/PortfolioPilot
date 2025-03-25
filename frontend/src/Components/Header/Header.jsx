@@ -52,7 +52,7 @@ const Header = () => {
         <nav className="flex items-center space-x-6">
           <Link to="/" className="hover:text-[#3B82F6] transition-colors">Home</Link>
           <Link to="/simulation" className="hover:text-[#3B82F6] transition-colors">Simulation</Link>
-          <Link to="/assessment" className="hover:text-[#3B82F6] transition-colors">Assessment</Link>
+          <Link to="/risk-assessment" className="hover:text-[#3B82F6] transition-colors">Assessment</Link>
           <Link to="/portfolio" className="hover:text-[#3B82F6] transition-colors">Portfolio</Link>
 
           {loggedInUser ? (

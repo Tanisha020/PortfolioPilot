@@ -31,7 +31,7 @@ function Home() {
           <p className="text-gray-400 mt-2">
             Analyze risk exposure and potential returns of your strategies.
           </p>
-          <button onClick={() => navigate("/simulation")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
+          <button onClick={() => navigate("/risk-assessment")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
             Analyze Now →
           </button>
         </div>

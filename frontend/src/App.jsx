@@ -7,6 +7,7 @@ import RegisterPage from "./pages/Register/RegisterPage.jsx";
 import Home from "./pages/Home/Home.jsx";
 import SimulationPage from "./pages/Simulation/SimulationPage.jsx";
 import SuggestionPage from "./pages/Suggestion/SuggestionPage.jsx";
+import RiskAssessmentPage from "./pages/RiskAssessment/RiskAssessmentPage.jsx";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/simulation" element={<SimulationPage />} />
           <Route path="/suggestion" element={<SuggestionPage />} />
+          <Route path="/risk-assessment" element={<RiskAssessmentPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
