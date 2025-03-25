@@ -27,9 +27,9 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="mt-8 text-center text-gray-400">
+                {/* <div className="mt-8 text-center text-gray-400">
                     <p>Made with ❤ by <span className="font-semibold text-[#3B82F6] text-xl">JuniHers Group 8</span></p>
-                </div>
+                </div> */}
             </div>
         </footer>
     );
