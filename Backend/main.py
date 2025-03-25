@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from auth import auth_router
 from routes.simulate import router as simulate_router
 from routes.suggestions import router as suggestions_router  # ✅ Import suggestions router
+from routes.risk_assessment import router as risk_router  # ✅ Import risk assessment route
 
 app = FastAPI()
 
@@ -25,6 +26,10 @@ app.include_router(simulate_router, prefix="/simulate")
 # ✅ Include suggestions routes
 print("✅ Suggestions Router Loaded Successfully!")
 app.include_router(suggestions_router, prefix="/suggestions")  # ✅ Add this line
+
+# ✅ Include risk assessment routes
+print("✅ Risk Assessment Router Loaded Successfully!")
+app.include_router(risk_router, prefix="/risk-assessment")
 
 app.add_middleware(
     CORSMiddleware,
