@@ -7,11 +7,12 @@ export default function NewPortfolio() {
   const [investmentAmount, setInvestmentAmount] = useState(100000);
   const [riskAppetite, setRiskAppetite] = useState("medium");
   const [assetPreferences, setAssetPreferences] = useState({
-    stocks: true,
-    bonds: true,
-    realEstate: false,
-    crypto: false,
+    stocks: 40,
+    bonds: 30,
+    realEstate: 20,
+    commodities: 10,
   });
+  
   const [duration, setDuration] = useState(5);
   const [marketCondition, setMarketCondition] = useState("bull");
   const [showOptimizedPortfolio, setShowOptimizedPortfolio] = useState(false);
@@ -70,56 +71,55 @@ export default function NewPortfolio() {
           />
         </div>
 
-        {/* Risk Appetite */}
-        <div>
-          <label className="block text-sm font-medium mb-2">
-            Risk Appetite
-          </label>
-          <div className="flex flex-wrap gap-2 md:gap-4">
-            {["low", "medium", "high"].map((risk) => (
-              <button
-                key={risk}
-                type="button"
-                className={`px-3 py-1 md:px-4 md:py-2 rounded capitalize ${
-                  riskAppetite === risk
-                    ? "bg-[#3B82F6] text-white"
-                    : "bg-[#3B3B4F] hover:bg-[#4B4B5F]"
-                }`}
-                onClick={() => setRiskAppetite(risk)}
-              >
-                {risk}
-              </button>
-            ))}
-          </div>
-        </div>
+{/* Risk Appetite */}
+<div>
+  <label className="block text-sm font-medium mb-2">
+    Risk Appetite (0 to 1)
+  </label>
+  <div className="flex items-center gap-4">
+    <input
+      type="range"
+      min="0"
+      max="1"
+      step="0.1"
+      value={riskAppetite}
+      onChange={(e) => setRiskAppetite(parseFloat(e.target.value))}
+      className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+    />
+    <span className="text-sm font-semibold">{Number(riskAppetite).toFixed(1)}</span>
+  </div>
+</div>
 
-        {/* Asset Preferences */}
-        <div>
-          <label className="block text-sm font-medium mb-2">
-            Asset Preferences
-          </label>
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
-            {Object.entries(assetPreferences).map(([asset, isChecked]) => (
-              <div key={asset} className="flex items-center">
-                <input
-                  type="checkbox"
-                  id={asset}
-                  checked={isChecked}
-                  onChange={(e) =>
-                    setAssetPreferences({
-                      ...assetPreferences,
-                      [asset]: e.target.checked,
-                    })
-                  }
-                  className="mr-2 h-4 w-4 text-[#3B82F6] rounded focus:ring-[#3B82F6] bg-[#3B3B4F] border-gray-600"
-                />
-                <label htmlFor={asset} className="capitalize text-sm md:text-base">
-                  {asset.replace(/([A-Z])/g, ' $1').trim()}
-                </label>
-              </div>
-            ))}
-          </div>
-        </div>
+
+       {/* Asset Preferences with Percentage Allocation */}
+<div>
+  <label className="block text-sm font-medium mb-2">
+    Asset Allocation (%)
+  </label>
+  {Object.entries(assetPreferences).map(([asset, value]) => (
+    <div key={asset} className="mb-3">
+      <label className="capitalize text-sm md:text-base">{asset.replace(/([A-Z])/g, ' $1').trim()}</label>
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={value}
+        step="5"
+        onChange={(e) => {
+          const newValue = Number(e.target.value);
+          const totalOther = Object.values(assetPreferences).reduce((sum, v) => sum + v, 0) - value;
+          
+          if (totalOther + newValue <= 100) {  // Ensure total allocation doesn't exceed 100%
+            setAssetPreferences({ ...assetPreferences, [asset]: newValue });
+          }
+        }}
+        className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+      />
+      <span className="ml-2 text-sm">{value}%</span>
+    </div>
+  ))}
+</div>
+
 
         {/* Investment Duration */}
         <div>
