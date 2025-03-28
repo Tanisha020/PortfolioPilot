@@ -14,35 +14,30 @@ class SimulationRequest(BaseModel):
     bonds: float
     real_estate: float
     commodities: float
-
-@router.post("/")  # ✅ Use POST method for simulation API
+    
+@router.post("/")
 async def simulate(request: SimulationRequest):
-    """
-    Run investment simulation.
-
-    Request Body:
-        - investment_amount (float): Initial investment amount.
-        - duration (int): Investment period in years.
-        - risk_appetite (float): Risk level (0 = low risk, 1 = high risk).
-        - market_condition (str): 'bull', 'bear', or 'neutral'.
-        - stocks (float): Percentage allocation to stocks.
-        - bonds (float): Percentage allocation to bonds.
-        - real_estate (float): Percentage allocation to real estate.
-        - commodities (float): Percentage allocation to commodities.
-
-    Returns:
-        dict: Aggregated simulation results.
-    """
     try:
-        # ✅ Validate input values
+        print("Received Request:", request.dict())  # Print input values
+        
         if request.investment_amount <= 0 or request.duration <= 0:
+            print("Invalid investment amount or duration")
             raise HTTPException(status_code=400, detail="Investment amount and duration must be greater than zero.")
         
+        if request.risk_appetite < 0 or request.risk_appetite > 1:
+            print("Invalid risk appetite:", request.risk_appetite)
+            raise HTTPException(status_code=400, detail="Risk appetite must be between 0 and 1.")
+            
+        if request.market_condition not in ["bull", "bear", "neutral"]:
+            print("Invalid market condition:", request.market_condition)
+            raise HTTPException(status_code=400, detail="Market condition must be 'bull', 'bear', or 'neutral'.")
+        
         total_allocation = request.stocks + request.bonds + request.real_estate + request.commodities
-        if total_allocation != 100:
+        if abs(total_allocation - 100) > 0.01:
+            print("Invalid allocations: Sum =", total_allocation)
             raise HTTPException(status_code=400, detail=f"Total asset allocation must sum to 100%, currently {total_allocation}%.")
 
-        # ✅ Run the simulation with validated inputs
+        # Run the simulation
         result = run_simulation(
             investment_amount=request.investment_amount,
             duration=request.duration,
@@ -54,10 +49,15 @@ async def simulate(request: SimulationRequest):
             commodities=request.commodities
         )
 
+        print("Simulation Result:", result)  # Debug the output
+
+        if "error" in result:
+            print("Simulation failed with error:", result["error"])
+            raise HTTPException(status_code=400, detail=result["error"])
+
         return {"status": "success", "data": result}
 
-    except ValueError as ve:
-        raise HTTPException(status_code=400, detail=str(ve))
-
     except Exception as e:
+        print("Unhandled error:", str(e))
         raise HTTPException(status_code=500, detail="Internal server error: " + str(e))
+
