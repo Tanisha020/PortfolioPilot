@@ -17,23 +17,27 @@ class PortfolioRequest(BaseModel):
 @router.post("/portfolio_suggestions")
 async def get_suggestions(request: PortfolioRequest):
     user_allocation = [
-        request.stocks / 100,  # Convert back to fractions
+        request.stocks / 100,  # Convert to fractions
         request.bonds / 100,
         request.real_estate / 100,
         request.commodities / 100
     ]
+
+    # Ensure allocations sum to 100%
     total_allocation = sum(user_allocation)
-    
     print("📩 Raw Request Data:", request.dict())  # Debugging
     print("✅ Converted Allocation:", user_allocation)  # Debugging
-
-    # Ensure weights sum to 1
     if not (0.99 <= total_allocation <= 1.01):
         raise HTTPException(status_code=400, detail="Allocations must sum to 100%.")
 
     # Get optimized allocation
-    optimized_allocation = get_optimized_portfolio(
+    optimized_results = get_optimized_portfolio(
         request.investment, request.duration, user_allocation, request.risk_tolerance
     )
+    print(optimized_results)
 
-    return {"optimized_allocation": {k: v * 100 for k, v in optimized_allocation.items()}}  # Convert back to %
+    # Check for errors from optimizer
+    if "error" in optimized_results:
+        raise HTTPException(status_code=500, detail=optimized_results["error"])
+
+    return optimized_results  # Return full results
