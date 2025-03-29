@@ -11,7 +11,7 @@ function Home() {
         <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
           Use our advanced simulation tools to optimize your investment strategy before committing real money.
         </p>
-        <button onClick={() => navigate("/simulation")} className="mt-6 px-6 py-3 bg-[#3B82F6] rounded-md text-lg hover:bg-[#2563EB] transition-colors">
+        <button onClick={() => navigate("/simulation")} className="mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
           Start Simulating
         </button>
       </section>
@@ -22,7 +22,7 @@ function Home() {
           <p className="text-gray-400 mt-2">
             Test different investment scenarios with our advanced simulation tools.
           </p>
-          <button onClick={() => navigate("/simulation")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
+          <button onClick={() => navigate("/simulation")} className="mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
             Try Now →
           </button>
         </div>
@@ -31,7 +31,7 @@ function Home() {
           <p className="text-gray-400 mt-2">
             Analyze risk exposure and potential returns of your strategies.
           </p>
-          <button onClick={() => navigate("/suggestion")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
+          <button onClick={() => navigate("/suggestion")} className="mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
             Analyze Now →
           </button>
         </div>
@@ -40,7 +40,7 @@ function Home() {
           <p className="text-gray-400 mt-2">
             Get personalized portfolio recommendations powered by AI.
           </p>
-          <button onClick={() => navigate("/risk-assessment")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
+          <button onClick={() => navigate("/risk-assessment")} className="mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
             Get Suggestions →
           </button>
         </div>

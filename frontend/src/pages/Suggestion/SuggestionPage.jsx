@@ -17,7 +17,7 @@ export default function SuggestionPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-3 md:gap-4">
             <button
-              className={`px-4 py-2 md:px-6 md:py-3 rounded-lg transition-colors ${
+              className={`mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ${
                 activeTab === "new"
                   ? "bg-[#3B82F6] text-white"
                   : "bg-[#3B3B4F] hover:bg-[#4B4B5F]"
@@ -27,7 +27,7 @@ export default function SuggestionPage() {
               Create New Portfolio
             </button>
             <button
-              className={`px-4 py-2 md:px-6 md:py-3 rounded-lg transition-colors ${
+              className={`mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ${
                 activeTab === "existing"
                   ? "bg-[#3B82F6] text-white"
                   : "bg-[#3B3B4F] hover:bg-[#4B4B5F]"

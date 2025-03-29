@@ -74,11 +74,11 @@ export default function SimulationPage() {
         label: "Portfolio Value",
         data: simulationResult
           ? [
-              formData.investment,
-              ...Array.from({ length: formData.duration }, (_, i) =>
-                simulationResult["Final Total Portfolio Value"] * ((0.6 + i * 0.15) > 1 ? 1 : 0.6 + i * 0.15)
-              ),
-            ]
+            formData.investment,
+            ...Array.from({ length: formData.duration }, (_, i) =>
+              simulationResult["Final Total Portfolio Value"] * ((0.6 + i * 0.15) > 1 ? 1 : 0.6 + i * 0.15)
+            ),
+          ]
           : [formData.investment, 125000, 150000, 180000, 210000, 245000], // Mock values
         borderColor: "#3B82F6",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
@@ -101,6 +101,7 @@ export default function SimulationPage() {
                 type="number"
                 className="w-full p-2 rounded bg-[#3B3B4F] text-white focus:outline-none focus:ring-2 focus:ring-[#3B82F6]"
                 value={formData.investment}
+                placeholder="Enter amount"
                 onChange={(e) => setFormData({ ...formData, investment: Number(e.target.value) })}
               />
             </div>
@@ -111,9 +112,8 @@ export default function SimulationPage() {
                 {[5, 10, 20].map((year) => (
                   <button
                     key={year}
-                    className={`px-4 py-2 rounded transition-colors ${
-                      formData.duration === year ? "bg-[#3B82F6] text-white" : "bg-[#3B3B4F] hover:bg-[#4B4B5F]"
-                    }`}
+                    className={`px-4 py-2 rounded transition-colors ${formData.duration === year ? "bg-[#3B82F6] text-white" : "bg-[#3B3B4F] hover:bg-[#4B4B5F]"
+                      }`}
                     onClick={() => setFormData({ ...formData, duration: year })}
                   >
                     {year} Years
@@ -175,13 +175,15 @@ export default function SimulationPage() {
               ))}
             </div>
 
-            <button
-              className="w-full bg-[#3B82F6] text-white p-2 rounded hover:bg-[#2563EB] transition-colors"
-              onClick={handleSimulate}
-              disabled={loading}
-            >
-              {loading ? "Simulating..." : "Simulate Strategy"}
-            </button>
+            <div className="flex justify-center">
+              <button
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
+                onClick={handleSimulate}
+                disabled={loading}
+              >
+                {loading ? "Simulating..." : "Simulate Strategy"}
+              </button>
+            </div>
             {error && <p className="text-red-500 mt-2">{error}</p>}
           </div>
 

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { handleSuccess } from "../../utils";
 import { ToastContainer } from "react-toastify";
-import logo from "../../assets/logo.jpeg"; 
+import logo from "../../assets/logo.jpeg";
 
 const Header = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -73,19 +73,21 @@ const Header = () => {
               {showLogout && (
                 <button
                   onClick={handleLogout}
-                  className="absolute top-12 right-0 mt-2 bg-[#3B82F6] text-white px-4 py-2 rounded-md hover:bg-[#2563EB] transition-colors"
+                  className="absolute right-0 mt-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
                 >
                   Logout
                 </button>
               )}
+
             </div>
           ) : (
             <button
               onClick={() => navigate("/login")}
-              className="px-4 py-2 bg-[#3B82F6] rounded-md hover:bg-[#2563EB] transition-colors"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
             >
               Sign In
             </button>
+
           )}
         </nav>
       </div>

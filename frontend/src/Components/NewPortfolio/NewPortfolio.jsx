@@ -196,7 +196,7 @@ export default function NewPortfolio() {
 
         <button
           type="submit"
-          className="w-full bg-[#3B82F6] text-white p-2 rounded hover:bg-[#2563EB] transition-colors font-medium"
+          className="mt-6 w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
         >
           Optimize Portfolio
         </button>
@@ -224,7 +224,7 @@ export default function NewPortfolio() {
             <div className="text-center">
               <button
                 onClick={handleGenerateSuggestions}
-                className="bg-[#10B981] text-white px-6 py-2 rounded hover:bg-[#059669] transition-colors font-medium"
+                className="w-full bg-[#3B82F6] text-white font-medium py-3 px-4 rounded-xl shadow-md hover:bg-[#377CD4] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] transition"
               >
                 Generate Detailed Suggestions
               </button>
