@@ -19,7 +19,8 @@ def optimize_portfolio(price_data, user_allocation, risk_tolerance):
     def neg_sharpe(weights):
         portfolio_return = np.dot(weights, mean_returns)
         portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))
-        sharpe_ratio = portfolio_return / (portfolio_volatility ** (1 - risk_tolerance))
+        sharpe_ratio =  (portfolio_return ** risk_tolerance) / portfolio_volatility
+
         return -sharpe_ratio  
 
     # Constraints: Sum of weights must be 1

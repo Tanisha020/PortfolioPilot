@@ -4,39 +4,8 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function PortfolioPieChart({ title }) {
-  const [chartData, setChartData] = useState(null);
-
-  useEffect(() => {
-    async function fetchPortfolioData() {
-      try {
-        const response = await fetch("http://localhost:8000/suggestions/portfolio_suggestions/"); // Update with your backend URL
-        const data = await response.json();
-
-        if (data.optimized_allocation) {
-          const labels = Object.keys(data.optimized_allocation);
-          const values = Object.values(data.optimized_allocation);
-
-          setChartData({
-            labels: labels,
-            datasets: [
-              {
-                label: "Asset Allocation",
-                data: values,
-                backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
-                borderColor: "#ffffff",
-                borderWidth: 1,
-              },
-            ],
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching portfolio data:", error);
-      }
-    }
-
-    fetchPortfolioData();
-  }, []);
+export default function PortfolioPieChart({ title ,data }) {
+  const [chartData, setChartData] = useState(data);
 
   return (
     <div className="p-4 bg-[#3B3B4F] rounded-lg">
