@@ -65,7 +65,7 @@ def get_optimized_portfolio(investment, duration, user_allocation, risk_toleranc
         if returns.max().max() > 1:
             returns = returns / 100  
         risk_free_rate = 5  # Assume 5% annual risk-free rate
-        expected_return = np.dot(returns.mean(), optimized_weights) *  100  # Convert to %
+        expected_return = np.dot(returns.mean(), optimized_weights) *252*  100  # Convert to %
         cov_matrix = returns.cov()
         volatility = np.sqrt(np.dot(optimized_weights.T, np.dot(cov_matrix, optimized_weights))) * np.sqrt(252) * 100
 
@@ -119,7 +119,7 @@ def get_optimized_portfolio(investment, duration, user_allocation, risk_toleranc
                 "Expected Return (%)": round(expected_return, 2),
                 "Risk (Volatility %)": round(volatility, 2),
                 "Sharpe Ratio": round(sharpe_ratio, 2),
-                "Diversification Score": round(diversification_score, 2)
+                # "Diversification Score": round(diversification_score, 2)
             },
             "insights": suggestions
         }

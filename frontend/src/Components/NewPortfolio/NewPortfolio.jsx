@@ -493,12 +493,8 @@ export default function NewPortfolio() {
       label: "Sharpe Ratio", 
       value: `${portfolioMetrics["Sharpe Ratio"]?.toFixed(2)}`, 
       improvement: true 
-    },
-    { 
-      label: "Diversification Score", 
-      value: `${portfolioMetrics["Diversification Score"]?.toExponential(2)}`, 
-      improvement: true 
     }
+
   ]}
 />
 
