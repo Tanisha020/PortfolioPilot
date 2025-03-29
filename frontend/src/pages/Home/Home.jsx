@@ -31,7 +31,7 @@ function Home() {
           <p className="text-gray-400 mt-2">
             Analyze risk exposure and potential returns of your strategies.
           </p>
-          <button onClick={() => navigate("/risk-assessment")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
+          <button onClick={() => navigate("/suggestion")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
             Analyze Now →
           </button>
         </div>
@@ -40,7 +40,7 @@ function Home() {
           <p className="text-gray-400 mt-2">
             Get personalized portfolio recommendations powered by AI.
           </p>
-          <button className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
+          <button onClick={() => navigate("/risk-assessment")} className="mt-4 px-4 py-2 bg-[#3B82F6] rounded-md text-sm hover:bg-[#2563EB] transition-colors">
             Get Suggestions →
           </button>
         </div>
