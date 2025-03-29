@@ -20,6 +20,8 @@ export default function SimulationPage() {
 
   const [simulationResult, setSimulationResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [recommendedStocks, setRecommendedStocks] = useState([]);
+
   const [error, setError] = useState("");
 
   const handleSimulate = async () => {
@@ -56,8 +58,14 @@ export default function SimulationPage() {
         throw new Error("Simulation failed. Check input values.");
       }
 
+      // const data = await response.json();
+      // setSimulationResult(data.data);
       const data = await response.json();
       setSimulationResult(data.data);
+      // setRecommendedStocks(data.data.Recommended_Stocks || []);
+      setRecommendedStocks(data.data["Recommended Stocks"] || []);
+
+
     } catch (error) {
       setError(error.message);
     } finally {
@@ -204,6 +212,22 @@ export default function SimulationPage() {
                 )
               )}
             </div>
+            <div className="bg-[#2A2A3A] rounded-lg p-6 shadow-lg mt-8">
+              <h3 className="text-xl font-semibold mb-6">Recommended Stocks</h3>
+              {recommendedStocks.length > 0 ? (
+                recommendedStocks.map((stock, index) => (
+                  <div key={index} className="p-4 bg-[#3B3B4F] rounded-lg">
+                    <p className="text-sm text-gray-400">{stock.Ticker}</p>
+                    <p className="text-lg font-semibold">{stock["Allocation (%)"]?.toFixed(2)}%</p>
+                  </div>
+                ))
+              ) : (
+                <p>No recommended stocks available.</p>
+              )}
+
+
+            </div>
+
           </div>
         </div>
       </div>

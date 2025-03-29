@@ -1,14 +1,17 @@
 import os
 import pandas as pd
 
+
 # Get the absolute path of the Backend directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")  # Ensure this points to the correct folder
 
 def load_data(asset_type):
     """
-    Loads historical data for the given asset type.
+    Loads historical data for the given asset type or individual stock ticker.
+    If asset_type is a stock ticker, extracts only its data from stock_data_5y.csv.
     """
+    # Asset class file paths
     file_paths = {
         "stocks": os.path.join(DATA_DIR, "stock_data_5y.csv"),
         "bonds": os.path.join(DATA_DIR, "bond_data_5y - Copy.csv"),
@@ -16,12 +19,38 @@ def load_data(asset_type):
         "commodities": os.path.join(DATA_DIR, "commodity_data_5y - Copy.csv")
     }
 
-    if asset_type not in file_paths:
-        raise ValueError(f"Invalid asset type: {asset_type}")
+    # ✅ Handle asset classes
+    if asset_type in file_paths:
+        file_path = file_paths[asset_type]
 
-    file_path = file_paths[asset_type]
+    # ✅ Handle individual stocks from the main stock data file
+    elif asset_type in ["AAPL", "GOOGL", "MSFT", "TSLA", "NVDA"]:  
+        stock_file = file_paths["stocks"]  # Load full stock dataset
 
+        if not os.path.exists(stock_file):
+            raise FileNotFoundError(f"❌ Stock data file not found: {stock_file}")
+
+        # Load entire stock data
+        df = pd.read_csv(stock_file)
+
+        # ✅ Ensure dataset contains a 'Ticker' column
+        if "Ticker" not in df.columns:
+            raise ValueError("❌ Missing 'Ticker' column in stock data file.")
+
+        # ✅ Filter for the specific stock
+        stock_data = df[df["Ticker"] == asset_type]
+
+        if stock_data.empty:
+            raise ValueError(f"❌ No data found for stock: {asset_type}")
+
+        return stock_data.reset_index(drop=True)
+
+    else:
+        raise ValueError(f"❌ Invalid asset type: {asset_type}")
+
+    # ✅ Check if the file exists
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"❌ Data file not found: {file_path}")
 
+    print(f"📂 Loading data from: {file_path}")  
     return pd.read_csv(file_path)
