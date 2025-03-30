@@ -35,10 +35,18 @@ export default function SimulationPage() {
     }
 
     try {
+      const token = localStorage.getItem("token");
+      console.log("Token:", token); 
+      if (!token) {
+        setError("Unauthorized: Please log in to access this feature.");
+        return;
+      }
+    
       const response = await fetch("http://127.0.0.1:8000/simulate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           investment_amount: formData.investment,
@@ -51,11 +59,11 @@ export default function SimulationPage() {
           commodities: formData.allocation.commodities,
         }),
       });
-
+    
       if (!response.ok) {
         throw new Error("Simulation failed. Check input values.");
       }
-
+    
       const data = await response.json();
       setSimulationResult(data.data);
     } catch (error) {
@@ -63,7 +71,7 @@ export default function SimulationPage() {
     } finally {
       setLoading(false);
     }
-  };
+  };    
 
   const years = ["Start", ...Array.from({ length: formData.duration }, (_, i) => `Year ${i + 1}`)];
 
