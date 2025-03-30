@@ -73,27 +73,37 @@ export default function SimulationPage() {
     }
   };
 
-  const years = ["Start", ...Array.from({ length: formData.duration }, (_, i) => `Year ${i + 1}`)];
+const years = ["Start", ...Array.from({ length: formData.duration }, (_, i) => `Year ${i + 1}`)];
 
-  const data = {
-    labels: years,
-    datasets: [
-      {
-        label: "Portfolio Value",
-        data: simulationResult
-          ? [
-              formData.investment,
-              ...Array.from({ length: formData.duration }, (_, i) =>
-                formData.investment *
-                Math.pow(1 + (simulationResult["Final Expected Return (%)"] / 100), i + 1) // Apply compound growth
-              ),
-            ]
-          : [formData.investment, ...Array.from({ length: formData.duration }, (_, i) => formData.investment * (1 + 0.1 * (i + 1)))], // Adjust mock data dynamically
-        borderColor: "#3B82F6",
-        backgroundColor: "rgba(59, 130, 246, 0.2)",
-      },
-    ],
-  };
+
+ 
+
+const data = {
+  labels: years,
+  datasets: [
+    {
+      label: "Portfolio Value",
+      data: simulationResult 
+        ? [formData.investment, ...simulationResult["Yearly Portfolio Values"]]  // Use backend values
+        : [formData.investment, 125000, 150000, 180000, 210000, 245000],  // Mock values for testing
+      borderColor: "#3B82F6",
+      backgroundColor: "rgba(59, 130, 246, 0.2)",
+    },
+  ],
+};
+
+  // const data = {
+  //   labels: Array.from({ length: formData.duration + 1 }, (_, i) => `Year ${i}`),  
+  //   datasets: [
+  //     {
+  //       label: "Portfolio Value",
+  //       data: simulationResult ? simulationResult["Portfolio Values"] : [formData.investment, 125000, 150000, 180000, 210000, 245000], // Mock values removed
+  //       borderColor: "#3B82F6",
+  //       backgroundColor: "rgba(59, 130, 246, 0.2)",
+  //     },
+  //   ],
+  // };
+
   
 
   return (
