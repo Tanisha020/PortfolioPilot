@@ -31,16 +31,16 @@ function Home() {
           <p className="text-gray-400 mt-2">
             Analyze risk exposure and potential returns of your strategies.
           </p>
-          <button onClick={() => navigate("/suggestion")} className="mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
+          <button onClick={() => navigate("/risk-assessment")} className="mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
             Analyze Now →
           </button>
         </div>
         <div className="p-6 bg-[#2A2A3A] rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
-          <h3 className="text-xl font-semibold text-[#3B82F6]">AI Portfolio Suggestions</h3>
+          <h3 className="text-xl font-semibold text-[#3B82F6]">Portfolio Suggestions</h3>
           <p className="text-gray-400 mt-2">
-            Get personalized portfolio recommendations powered by AI.
+            Get personalized portfolio recommendations.
           </p>
-          <button onClick={() => navigate("/risk-assessment")} className="mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
+          <button onClick={() => navigate("/suggestion")} className="mt-6 w-full max-w-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
             Get Suggestions →
           </button>
         </div>
@@ -60,7 +60,7 @@ function Home() {
           </div>
           <div className="p-6 bg-[#2A2A3A] rounded-lg shadow-md hover:shadow-lg transition-shadow">
             <p className="text-gray-300">
-              “The AI suggestions have been incredibly accurate and helpful.”
+              “The suggestions have been incredibly accurate and helpful.”
             </p>
             <h4 className="mt-4 font-semibold text-[#3B82F6]">Mark Thompson</h4>
             <p className="text-gray-400">Portfolio Manager</p>

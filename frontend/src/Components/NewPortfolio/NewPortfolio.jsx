@@ -233,7 +233,7 @@ export default function NewPortfolio() {
 
           {showSuggestions && (
             <SuggestionsList 
-              title="AI Recommendations"
+              title="Recommendations"
               suggestions={[
                 {
                   title: "Increase Diversification",
