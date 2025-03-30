@@ -12,7 +12,7 @@ __pycache__/
 Pipfile
 Pipfile.lock
 venv/
-.env
+# .env
 
 # Logs and database files
 logs/
@@ -21,8 +21,8 @@ logs/
 *.db
 
 # Environment variables
-.env
-*.env
+# .env
+# *.env
 
 # IDE and Editor settings
 .vscode/
