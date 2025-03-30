@@ -497,8 +497,6 @@ export default function NewPortfolio() {
 
   ]}
 />
-
-
           {!showSuggestions && (
             <div className="text-center">
               <button
@@ -512,7 +510,6 @@ export default function NewPortfolio() {
 
           {showSuggestions && (
             <SuggestionsList 
-<<<<<<< HEAD
               title="Recommendations"
               suggestions={[
                 {
@@ -529,24 +526,6 @@ export default function NewPortfolio() {
                 }
               ]}
             />
-=======
-  title="AI Recommendations"
-  suggestions={insights.length > 0 ? insights : [
-    {
-      title: "Increase Diversification",
-      content: "Consider adding real estate (REITs) to your portfolio. Our analysis shows this could reduce volatility by ~15% while maintaining returns."
-    },
-    {
-      title: "Rebalancing Strategy",
-      content: "We recommend quarterly rebalancing to maintain your target allocation. Automated rebalancing could save you ~2.3% annually in slippage costs."
-    },
-    {
-      title: "Tax Optimization",
-      content: "For taxable accounts, consider placing bonds in tax-advantaged accounts and stocks in taxable accounts to improve after-tax returns by ~1.2%."
-    }
-  ]}
-/>
->>>>>>> 79d94d550aeac4a2072c0b461e05f46a833c11e6
           )}
         </div>
       )}
