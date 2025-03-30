@@ -26,7 +26,7 @@ export default function NewPortfolio() {
   });
   const [datatobefeed, setDatatobefeed] = useState(initialPieData);
 
-  const [duration, setDuration] = useState(5);
+  const [duration, setDuration] = useState("");
   const [marketCondition, setMarketCondition] = useState("bull");
   const [showOptimizedPortfolio, setShowOptimizedPortfolio] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -185,22 +185,23 @@ export default function NewPortfolio() {
             </div>
           ))}
         </div>
-
-        {/* Investment Duration */}
         <div>
-          <label className="block text-sm font-medium mb-2">Investment Duration</label>
-          <select
+
+          <label className="block text-sm font-medium mb-2">Investment Duration (Years)</label>
+          <input
+            type="number"
+            min="1"
+            max="50"
             className="w-full p-2 rounded bg-[#3B3B4F] text-white focus:outline-none focus:ring-2 focus:ring-[#3B82F6]"
             value={duration}
-            onChange={(e) => setDuration(Number(e.target.value))}
-          >
-            {[1, 3, 5, 7, 10].map((year) => (
-              <option key={year} value={year}>
-                {year} Year{year > 1 ? "s" : ""}
-              </option>
-            ))}
-          </select>
+            placeholder="Investment Duration (in years)"
+            onChange={(e) => {
+              const value = e.target.value === "" ? "" : Math.max(1, Math.min(50, Number(e.target.value)));
+              setDuration(value);
+            }}
+          />
         </div>
+
 
         <button
           type="submit"

@@ -36,12 +36,12 @@ export default function SimulationPage() {
 
     try {
       const token = localStorage.getItem("token");
-      console.log("Token:", token); 
+      console.log("Token:", token);
       if (!token) {
         setError("Unauthorized: Please log in to access this feature.");
         return;
       }
-    
+
       const response = await fetch("http://127.0.0.1:8000/simulate", {
         method: "POST",
         headers: {
@@ -59,11 +59,11 @@ export default function SimulationPage() {
           commodities: formData.allocation.commodities,
         }),
       });
-    
+
       if (!response.ok) {
         throw new Error("Simulation failed. Check input values.");
       }
-    
+
       const data = await response.json();
       setSimulationResult(data.data);
     } catch (error) {
@@ -71,7 +71,7 @@ export default function SimulationPage() {
     } finally {
       setLoading(false);
     }
-  };    
+  };
 
   const years = ["Start", ...Array.from({ length: formData.duration }, (_, i) => `Year ${i + 1}`)];
 
@@ -82,17 +82,19 @@ export default function SimulationPage() {
         label: "Portfolio Value",
         data: simulationResult
           ? [
-            formData.investment,
-            ...Array.from({ length: formData.duration }, (_, i) =>
-              simulationResult["Final Total Portfolio Value"] * ((0.6 + i * 0.15) > 1 ? 1 : 0.6 + i * 0.15)
-            ),
-          ]
-          : [formData.investment, 125000, 150000, 180000, 210000, 245000], // Mock values
+              formData.investment,
+              ...Array.from({ length: formData.duration }, (_, i) =>
+                formData.investment *
+                Math.pow(1 + (simulationResult["Final Expected Return (%)"] / 100), i + 1) // Apply compound growth
+              ),
+            ]
+          : [formData.investment, ...Array.from({ length: formData.duration }, (_, i) => formData.investment * (1 + 0.1 * (i + 1)))], // Adjust mock data dynamically
         borderColor: "#3B82F6",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
       },
     ],
   };
+  
 
   return (
     <div className="min-h-screen bg-[#1E1E2E] text-white p-8">
@@ -115,20 +117,20 @@ export default function SimulationPage() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">Duration</label>
-              <div className="flex gap-2">
-                {[5, 10, 20].map((year) => (
-                  <button
-                    key={year}
-                    className={`px-4 py-2 rounded transition-colors ${formData.duration === year ? "bg-[#3B82F6] text-white" : "bg-[#3B3B4F] hover:bg-[#4B4B5F]"
-                      }`}
-                    onClick={() => setFormData({ ...formData, duration: year })}
-                  >
-                    {year} Years
-                  </button>
-                ))}
-              </div>
+              <label className="block text-sm font-medium mb-2">Duration (Years)</label>
+              <input
+                type="number"
+                min="1"
+                max="20"
+                className="w-full p-2 rounded bg-[#3B3B4F] text-white focus:outline-none focus:ring-2 focus:ring-[#3B82F6]"
+                value={formData.duration}
+                onChange={(e) => {
+                  const value = Math.max(1, Math.min(20, Number(e.target.value))); 
+                  setFormData({ ...formData, duration: value });
+                }}
+              />
             </div>
+
 
             <div className="mb-6">
               <label className="block text-sm font-medium mb-2">Risk Appetite</label>
