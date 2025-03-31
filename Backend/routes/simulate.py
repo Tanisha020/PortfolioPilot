@@ -3,19 +3,17 @@ from pydantic import BaseModel
 from services.simulation_ import run_simulation
 
 router = APIRouter()
-
-# Define request body structure
 class SimulationRequest(BaseModel):
     investment_amount: float
     duration: int
-    risk_appetite: float  # Slider input (0 to 1)
-    market_condition: str  # 'bull', 'bear', 'neutral'
+    risk_appetite: float  
+    market_condition: str 
     stocks: float
     bonds: float
     real_estate: float
     commodities: float
 
-@router.post("/")  # ✅ Use POST method for simulation API
+@router.post("/")  
 async def simulate(request: SimulationRequest):
     """
     Run investment simulation.
@@ -34,7 +32,7 @@ async def simulate(request: SimulationRequest):
         dict: Aggregated simulation results.
     """
     try:
-        # ✅ Validate input values
+       
 
         if request.investment_amount <= 0 or request.duration <= 0:
 
@@ -45,7 +43,7 @@ async def simulate(request: SimulationRequest):
 
             raise HTTPException(status_code=400, detail=f"Total asset allocation must sum to 100%, currently {total_allocation}%.")
 
-        # ✅ Run the simulation with validated inputs
+       
         result = run_simulation(
             investment_amount=request.investment_amount,
             duration=request.duration,

@@ -11,7 +11,7 @@ def load_data(asset_type):
     Loads historical data for the given asset type or individual stock ticker.
     If asset_type is a stock ticker, extracts only its data from stock_data_5y.csv.
     """
-    # Asset class file paths
+ 
     file_paths = {
         "stocks": os.path.join(DATA_DIR, "stock_data_5y.csv"),
         "bonds": os.path.join(DATA_DIR, "bond_data_5y - Copy.csv"),
@@ -19,25 +19,23 @@ def load_data(asset_type):
         "commodities": os.path.join(DATA_DIR, "commodity_data_5y - Copy.csv")
     }
 
-    # ✅ Handle asset classes
+  
     if asset_type in file_paths:
         file_path = file_paths[asset_type]
 
-    # ✅ Handle individual stocks from the main stock data file
     elif asset_type in ["AAPL", "GOOGL", "MSFT", "TSLA", "NVDA"]:  
-        stock_file = file_paths["stocks"]  # Load full stock dataset
+        stock_file = file_paths["stocks"]  
 
         if not os.path.exists(stock_file):
             raise FileNotFoundError(f"❌ Stock data file not found: {stock_file}")
 
-        # Load entire stock data
+        
         df = pd.read_csv(stock_file)
 
-        # ✅ Ensure dataset contains a 'Ticker' column
         if "Ticker" not in df.columns:
             raise ValueError("❌ Missing 'Ticker' column in stock data file.")
 
-        # ✅ Filter for the specific stock
+      
         stock_data = df[df["Ticker"] == asset_type]
 
         if stock_data.empty:
@@ -48,7 +46,6 @@ def load_data(asset_type):
     else:
         raise ValueError(f"❌ Invalid asset type: {asset_type}")
 
-    # ✅ Check if the file exists
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"❌ Data file not found: {file_path}")
 
