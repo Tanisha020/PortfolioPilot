@@ -186,7 +186,7 @@ def run_simulation(investment_amount, duration, risk_appetite, market_condition,
     avg_max_drawdown = avg_max_drawdown
 
     # Compute Sharpe Ratio (Risk-Adjusted Return)
-    risk_free_rate = 0.04  # Assuming 4% annual risk-free rate
+    # risk_free_rate = 0.04  # Assuming 4% annual risk-free rate
     
     # sharpe_ratio = (cagr - risk_free_rate) / avg_volatility if avg_volatility > 0 else 0
 

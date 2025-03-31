@@ -152,4 +152,4 @@ def optimize_portfolio(price_data, user_allocation, risk_tolerance):
     # Normalize the output weights to percentage
     optimized_weights = result.x / np.sum(result.x)  # Ensure the sum is exactly 1
     
-    return optimized_weights * 100  # Convert to percentage
+    return optimized_weights * 100 
