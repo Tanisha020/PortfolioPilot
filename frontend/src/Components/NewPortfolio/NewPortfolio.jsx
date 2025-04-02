@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PortfolioPieChart from "../PortfolioPieChart/PortfolioPieChart";
 import PerformanceMetrics from "../PerformanceMetrics/PerformanceMetrics";
 import SuggestionsList from "../SuggestionsList/SuggestionsList";
@@ -16,6 +17,7 @@ const initialPieData = {
 };
 
 export default function NewPortfolio() {
+  const navigate = useNavigate();
   const [investmentAmount, setInvestmentAmount] = useState(100000);
   const [riskAppetite, setRiskAppetite] = useState(0.5);
   const [assetPreferences, setAssetPreferences] = useState({
@@ -25,7 +27,6 @@ export default function NewPortfolio() {
     commodities: 10,
   });
   const [datatobefeed, setDatatobefeed] = useState(initialPieData);
-
   const [duration, setDuration] = useState("");
   const [marketCondition, setMarketCondition] = useState("bull");
   const [showOptimizedPortfolio, setShowOptimizedPortfolio] = useState(false);
@@ -33,14 +34,32 @@ export default function NewPortfolio() {
   const [optimizedStocksData, setOptimizedStocksData] = useState(null);
   const [insights, setInsights] = useState([]);
   const [portfolioMetrics, setPortfolioMetrics] = useState(null);
+  const [error, setError] = useState("");
+
   const handleOptimizePortfolio = async (e) => {
     e.preventDefault();
+    
+    // Check for authentication token
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Please login to access this feature");
+      navigate("/login");
+      return;
+    }
+
+    // Validate inputs
+    if (!duration || duration < 1 || duration > 50) {
+      setError("Please enter a valid duration between 1 and 50 years");
+      return;
+    }
+
     setShowOptimizedPortfolio(false);
     setShowSuggestions(false);
     setInsights([]);
+    setError("");
 
     const datatosend = {
-      investment: investmentAmount * 1.0,  // Ensures numeric format
+      investment: investmentAmount * 1.0,
       duration: duration,
       risk_tolerance: riskAppetite * 1.0,
       stocks: assetPreferences.stocks,
@@ -49,7 +68,7 @@ export default function NewPortfolio() {
       commodities: assetPreferences.commodities,
     };
 
-    console.log("🚀 Data being sent to backend:", datatosend);
+    console.log("Data being sent to backend:", datatosend);
 
     try {
       const res = await fetch("http://127.0.0.1:8000/suggestions/portfolio_suggestions", {
@@ -57,11 +76,17 @@ export default function NewPortfolio() {
         headers: {
           accept: "application/json",
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` // Add token to headers
         },
         body: JSON.stringify(datatosend),
       });
 
       if (!res.ok) {
+        if (res.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/login");
+          return;
+        }
         throw new Error(`HTTP error! status: ${res.status}`);
       }
 
@@ -105,16 +130,16 @@ export default function NewPortfolio() {
         }
         if (data.insights) {
           setInsights(data.insights);
-          setShowSuggestions(true); // Ensure suggestions are shown
+          setShowSuggestions(true);
         }
         if (data.portfolio_metrics) {
-          setPortfolioMetrics(data.portfolio_metrics);  // ✅ Store portfolio metrics in state
+          setPortfolioMetrics(data.portfolio_metrics);
         }
         setShowOptimizedPortfolio(true);
       }
     } catch (error) {
       console.error("Error during portfolio optimization:", error);
-      alert("Failed to optimize portfolio. Please check the input data and try again.");
+      setError("Failed to optimize portfolio. Please check the input data and try again.");
     }
   };
 
@@ -125,6 +150,7 @@ export default function NewPortfolio() {
   return (
     <div className="bg-[#2A2A3A] rounded-lg p-4 md:p-6 shadow-lg">
       <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">Create a New Portfolio</h2>
+      {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
       <form className="space-y-4 md:space-y-6" onSubmit={handleOptimizePortfolio}>
         {/* Investment Amount */}
         <div>
@@ -186,7 +212,6 @@ export default function NewPortfolio() {
           ))}
         </div>
         <div>
-
           <label className="block text-sm font-medium mb-2">Investment Duration (Years)</label>
           <input
             type="number"
@@ -201,7 +226,6 @@ export default function NewPortfolio() {
             }}
           />
         </div>
-
 
         <button
           type="submit"
@@ -238,9 +262,9 @@ export default function NewPortfolio() {
                 value: `${portfolioMetrics["Sharpe Ratio"]?.toFixed(2)}`,
                 improvement: true
               }
-
             ]}
           />
+          
           {!showSuggestions && (
             <div className="text-center">
               <button
@@ -251,33 +275,16 @@ export default function NewPortfolio() {
               </button>
             </div>
           )}
+          
           {showSuggestions && insights.length > 0 && (
-  <SuggestionsList
-    title="Recommendations"
-    suggestions={[
-      ...insights.map((insight) => ({
-        title: insight.title,
-        content: insight.content,
-      })),
-      // {
-      //   title: "Increase Diversification",
-      //   content:
-      //     "Consider adding real estate (REITs) to your portfolio. Our analysis shows this could reduce volatility by ~15% while maintaining returns.",
-      // },
-      // {
-      //   title: "Rebalancing Strategy",
-      //   content:
-      //     "We recommend quarterly rebalancing to maintain your target allocation. Automated rebalancing could save you ~2.3% annually in slippage costs.",
-      // },
-      // {
-      //   title: "Tax Optimization",
-      //   content:
-      //     "For taxable accounts, consider placing bonds in tax-advantaged accounts and stocks in taxable accounts to improve after-tax returns by ~1.2%.",
-      // },
-    ]}
-  />
-)}
-
+            <SuggestionsList
+              title="Recommendations"
+              suggestions={insights.map((insight) => ({
+                title: insight.title,
+                content: insight.content,
+              }))}
+            />
+          )}
         </div>
       )}
     </div>

@@ -36,9 +36,10 @@ export default function SimulationPage() {
 
     try {
       const token = localStorage.getItem("token");
-      console.log("Token:", token);
+      // console.log("Token:", token);
       if (!token) {
         setError("Unauthorized: Please log in to access this feature.");
+        navigate("/login");
         return;
       }
 
