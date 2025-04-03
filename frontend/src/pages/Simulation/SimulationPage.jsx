@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -21,6 +22,7 @@ export default function SimulationPage() {
   const [simulationResult, setSimulationResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSimulate = async () => {
     setLoading(true);
